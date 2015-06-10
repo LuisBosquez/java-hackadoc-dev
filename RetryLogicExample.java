@@ -36,26 +36,30 @@ public class RetryLogicExample {
     
     public static void connectAndQuery(){
         Connection con = null;
-        
+        long delayTime = 1;
         for (int cc = 1; cc <= maxCountTriesConnectAndQuery; cc++){
             try
             {
+                // If the connection is unsuccessful, the program will follow the retry logic. Otherwise, the execution will end.
                 establishConnection(con);
                 if(con != null){
                     try { con.close(); } catch(Exception e) {}
                 }
-                
+                System.out.println("Connection successful.");
                 break;
             }
             catch (SQLException se)
             {
                 // Print out error message.
                 System.out.println(se.getMessage());
+                
                 // Boolean flag to identify transient errors.
                 boolean isTransientError;
                 
+                // Transient error detection strategy.
                 isTransientError = detectTransientError(se);
                 
+                // If a transient error wasn't detected, it means that the error is persistent and will not be sorted out by the retry logic.
                 if(isTransientError == false){
                     System.out.println("Persistent error suffered. Error number: " + se.getErrorCode());
                     break;
@@ -69,13 +73,17 @@ public class RetryLogicExample {
                 System.out.println("Unexpected exception type caught. Will terminate.");
             }
             
+            // Delay time increases exponentially.
+            delayTime *= secondsBetweenRetries;
+            
             try {
-                Thread.sleep(secondsBetweenRetries * 1000);
+                // Execution is delayed before retrying.
+                Thread.sleep(delayTime * 1000);
                 System.out.println("Waiting " + secondsBetweenRetries + " seconds...");
             } catch (InterruptedException ex) {
                 Logger.getLogger(RetryLogicExample.class.getName()).log(Level.SEVERE, null, ex);
             }
-            secondsBetweenRetries *= 2;
+
         }
         
     }

@@ -23,9 +23,9 @@ public class RetryLogicExample {
     static int[] transientErrorCodes = {4060, 10928, 10929, 40197, 40501, 40544, 40549, 40550, 40551, 40552, 40553, 40613};
     
     // Connection URL obtained from the SQL DB portal.
-    static String connectionUrl = "jdbc:sqlserver://tewc028svk.database.windows.net:1433;" + 
+    static String connectionUrl = "jdbc:sqlserver://{your_server}.database.windows.net:1433;" + 
                 "database=test;"
-                + "user=luisbosquez@tewc028svk;"
+                + "user={your_username}}@{your_server}};"
                 + "password={your_password};"
                 + "encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout="+ connectionTimeoutSeconds +""; 
     
